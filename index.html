@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- HTML5 QR Code Reader Library -->
+    <script src="https://unpkg.com/html5-qrcode" defer></script>
 </head>
 <body>
     <!-- Background Decorator Glows -->
@@ -65,14 +67,15 @@
     <!-- Login / Welcome Modal with QR Code -->
     <div class="modal-overlay active" id="welcome-modal">
         <div class="modal-card login-card">
-            <div class="login-badge">🔐 玩家登入</div>
+            <div class="login-badge">🔐 玩家登入門戶</div>
             <div class="modal-header">
                 <div class="logo-icon large">🔤</div>
                 <h2>英文單字配對遊戲</h2>
                 <p>English Word Memory Challenge</p>
             </div>
 
-            <div class="qr-container" id="qr-login-btn" title="點擊 QR Code 登入遊戲">
+            <!-- QR Code Display Area (Click to Login) -->
+            <div class="qr-container" id="qr-login-btn" title="點按或掃描我的 QR Code 登入遊戲">
                 <div class="qr-wrapper">
                     <img src="我的QR.png" id="qr-img" alt="我的 QR Code" onerror="this.onerror=null; this.src='QR.png';">
                     <div class="qr-scan-line"></div>
@@ -80,9 +83,22 @@
                 <div class="qr-pulse"></div>
             </div>
 
-            <div class="login-instruction">
-                <span class="finger-icon">👇</span>
-                <span class="login-text">點擊上方 <strong>QR Code</strong> 登入遊戲</span>
+            <!-- Live Camera Scanner Box (Hidden by default) -->
+            <div id="camera-scanner-box" class="camera-scanner-box hidden">
+                <div id="qr-reader"></div>
+                <button id="btn-close-camera" class="btn-secondary">❌ 關閉相機掃描</button>
+            </div>
+
+            <!-- Login Action Modes -->
+            <div class="login-actions" id="login-actions">
+                <div class="login-instruction">
+                    <span class="finger-icon">👇</span>
+                    <span class="login-text">點按上方 <strong>QR Code 圖片</strong> 登入</span>
+                </div>
+                <div class="divider-line"><span>或</span></div>
+                <button id="btn-open-camera" class="btn-camera">
+                    <span>📷 開啟相機掃描 QR Code 登入</span>
+                </button>
             </div>
         </div>
     </div>
