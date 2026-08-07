@@ -20,6 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const victoryModal = document.getElementById('victory-modal');
     const welcomeModal = document.getElementById('welcome-modal');
     const qrLoginBtn = document.getElementById('qr-login-btn');
+    const btnOpenCamera = document.getElementById('btn-open-camera');
+    const btnCloseCamera = document.getElementById('btn-close-camera');
+    const cameraScannerBox = document.getElementById('camera-scanner-box');
+    const loginActions = document.getElementById('login-actions');
     const btnPlayAgain = document.getElementById('btn-play-again');
 
     // Modal Stat Elements
@@ -42,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let score = 1000;
     let gameStarted = false;
     let isLoggedIn = false;
+    let html5QrScanner = null;
 
     // Load High Score from LocalStorage
     let highScore = parseInt(localStorage.getItem('wordMatch_highScore')) || 0;
@@ -123,23 +128,80 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Perform Login Trigger
+    function triggerLoginSuccess(method = 'click') {
+        if (isLoggedIn) return;
+        isLoggedIn = true;
+
+        playSound('login');
+
+        // Stop camera if running
+        stopCamera();
+
+        // Animate Login Screen Dismissal
+        welcomeModal.classList.remove('active');
+
+        // Speak Welcome Voice
+        speakWord("Welcome! Let's match the words!");
+
+        // Initialize Game Board
+        initGame();
+    }
+
     // ==========================================
-    // QR Code Login Event Listener
+    // QR Code Login Listeners (Click & Scan)
     // ==========================================
     if (qrLoginBtn) {
-        qrLoginBtn.addEventListener('click', () => {
-            playSound('login');
-            isLoggedIn = true;
+        qrLoginBtn.addEventListener('click', () => triggerLoginSuccess('click'));
+    }
 
-            // Animate Login Screen Dismissal
-            welcomeModal.classList.remove('active');
+    // Open Camera Scanner
+    if (btnOpenCamera) {
+        btnOpenCamera.addEventListener('click', () => {
+            qrLoginBtn.classList.add('hidden');
+            loginActions.classList.add('hidden');
+            cameraScannerBox.classList.remove('hidden');
 
-            // Speak Welcome Voice
-            speakWord("Welcome! Let's match the words!");
-
-            // Initialize Game Board
-            initGame();
+            if (typeof Html5QrcodeScanner !== 'undefined') {
+                html5QrScanner = new Html5QrcodeScanner(
+                    "qr-reader",
+                    { fps: 10, qrbox: { width: 180, height: 180 } },
+                    false
+                );
+                html5QrScanner.render((decodedText, decodedResult) => {
+                    console.log(`QR Code Scanned: ${decodedText}`);
+                    triggerLoginSuccess('scan');
+                }, (error) => {
+                    // Ignore scanning frame errors
+                });
+            } else {
+                alert("相機掃描元件載入中，請直接點擊上方 QR Code 圖片登入！");
+                stopCamera();
+            }
         });
+    }
+
+    // Close Camera Scanner
+    if (btnCloseCamera) {
+        btnCloseCamera.addEventListener('click', stopCamera);
+    }
+
+    function stopCamera() {
+        if (html5QrScanner) {
+            try {
+                html5QrScanner.clear();
+            } catch (e) {}
+            html5QrScanner = null;
+        }
+        cameraScannerBox.classList.add('hidden');
+        qrLoginBtn.classList.remove('hidden');
+        loginActions.classList.remove('hidden');
+    }
+
+    // Auto Check URL Parameters for Scan Login
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('scan') || urlParams.has('login') || window.location.hash === '#login') {
+        triggerLoginSuccess('url');
     }
 
     // ==========================================
