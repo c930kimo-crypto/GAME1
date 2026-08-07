@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const highScoreDisplay = document.getElementById('high-score-display');
     const btnRestart = document.getElementById('btn-restart');
     const victoryModal = document.getElementById('victory-modal');
+    const welcomeModal = document.getElementById('welcome-modal');
+    const qrLoginBtn = document.getElementById('qr-login-btn');
     const btnPlayAgain = document.getElementById('btn-play-again');
 
     // Modal Stat Elements
@@ -39,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let elapsedTime = 0;
     let score = 1000;
     let gameStarted = false;
+    let isLoggedIn = false;
 
     // Load High Score from LocalStorage
     let highScore = parseInt(localStorage.getItem('wordMatch_highScore')) || 0;
@@ -69,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
             osc.start(now);
             osc.stop(now + 0.08);
-        } else if (type === 'match') {
+        } else if (type === 'match' || type === 'login') {
             // Ascending Arpeggio (C5 - E5 - G5 - C6)
             const notes = [523.25, 659.25, 783.99, 1046.50];
             notes.forEach((freq, idx) => {
@@ -118,6 +121,25 @@ document.addEventListener('DOMContentLoaded', () => {
             utterance.rate = 0.9;
             window.speechSynthesis.speak(utterance);
         }
+    }
+
+    // ==========================================
+    // QR Code Login Event Listener
+    // ==========================================
+    if (qrLoginBtn) {
+        qrLoginBtn.addEventListener('click', () => {
+            playSound('login');
+            isLoggedIn = true;
+
+            // Animate Login Screen Dismissal
+            welcomeModal.classList.remove('active');
+
+            // Speak Welcome Voice
+            speakWord("Welcome! Let's match the words!");
+
+            // Initialize Game Board
+            initGame();
+        });
     }
 
     // ==========================================
@@ -360,6 +382,6 @@ document.addEventListener('DOMContentLoaded', () => {
     btnRestart.addEventListener('click', initGame);
     btnPlayAgain.addEventListener('click', initGame);
 
-    // Initialize Game on Startup
+    // Initialize Board on Startup
     initGame();
 });
