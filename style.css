@@ -118,6 +118,13 @@ body {
     box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
 }
 
+.logo-icon.large {
+    width: 64px;
+    height: 64px;
+    font-size: 40px;
+    margin-bottom: 8px;
+}
+
 .brand h1 {
     font-family: var(--font-heading);
     font-size: 24px;
@@ -439,16 +446,16 @@ body {
     40%, 80% { transform: translateX(8px); }
 }
 
-/* Victory Overlay Modal */
+/* Modals Overlay (General) */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(9, 13, 22, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(9, 13, 22, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     z-index: 100;
     display: flex;
     align-items: center;
@@ -477,7 +484,7 @@ body {
     align-items: center;
     gap: 20px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(56, 189, 248, 0.2);
-    transform: scale(0.8);
+    transform: scale(0.85);
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -485,6 +492,125 @@ body {
     transform: scale(1);
 }
 
+/* Login Modal Specific Styling */
+.login-card {
+    position: relative;
+    border-color: rgba(56, 189, 248, 0.3);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 50px rgba(56, 189, 248, 0.25);
+}
+
+.login-badge {
+    position: absolute;
+    top: -14px;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 16px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+    letter-spacing: 0.5px;
+}
+
+/* Interactive QR Code Component */
+.qr-container {
+    position: relative;
+    cursor: pointer;
+    margin: 8px 0;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.qr-container:hover {
+    transform: scale(1.06);
+}
+
+.qr-wrapper {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(56, 189, 248, 0.3);
+    border: 3px solid var(--accent-cyan);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+/* Animated Neon Scanner Line */
+.qr-scan-line {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--accent-cyan), #ffffff, var(--accent-cyan), transparent);
+    box-shadow: 0 0 12px var(--accent-cyan);
+    animation: scanLine 2.2s infinite ease-in-out;
+}
+
+@keyframes scanLine {
+    0% { top: 0%; opacity: 0.3; }
+    50% { top: 96%; opacity: 1; }
+    100% { top: 0%; opacity: 0.3; }
+}
+
+/* QR Outer Pulsing Ring */
+.qr-pulse {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 28px;
+    border: 2px solid var(--accent-cyan);
+    opacity: 0.4;
+    animation: qrPulse 2s infinite ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes qrPulse {
+    0% { transform: scale(0.96); opacity: 0.6; }
+    50% { transform: scale(1.04); opacity: 0.1; }
+    100% { transform: scale(0.96); opacity: 0.6; }
+}
+
+.login-instruction {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    color: var(--text-sub);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-instruction strong {
+    color: var(--accent-cyan);
+}
+
+.finger-icon {
+    font-size: 20px;
+    animation: fingerBounce 1.2s infinite ease-in-out;
+}
+
+@keyframes fingerBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+/* Victory Trophy Badge */
 .trophy-badge {
     font-size: 50px;
     width: 90px;
